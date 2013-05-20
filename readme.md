@@ -85,3 +85,9 @@ Contributing
 ============
 
 I graciously accept bugs and pull requests.
+
+
+Thanks
+======
+
+Special thanks to Danny Hermes and his [endpoints-proto-datastore](https://github.com/GoogleCloudPlatform/endpoints-proto-datastore) library, which helped me figure out a few quirky bits of ndb-to-message mapping. It's a much more comprehensive library and great if you want a more direct and magical approach to integrating protorpc, ndb, and endpoints.
