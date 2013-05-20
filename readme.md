@@ -75,6 +75,12 @@ If you have two or more messages classes that you'd like to combine into one mes
     )
 
 
+Things That Don't Work
+======================
+
+At the moment, I do not have a clever solution for supporting computed properties. I may take the approach seen in the endpoints-proto-datastore and add a TypedComputedProperty. However, my goal was to not modify any Model classes if I didn't absolutely have to. I'm open to suggestions on this.
+
+
 Installation
 ============
 
