@@ -79,3 +79,9 @@ Installation
 ============
 
 ProtoPigeon is intended to be used with App Engine projects. To use, simply copy the protopigeon folder into the root of your App Engine project, or if you have a 3rd-party package directory setup, in there. That's it!
+
+
+Contributing
+============
+
+I graciously accept bugs and pull requests.
