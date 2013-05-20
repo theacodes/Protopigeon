@@ -1,7 +1,7 @@
 ProtoPigeon
 ===========
 
-ProtoPigeon provides utilities for generating protorpc Messages from ndb Models. It can generate Message classes from Models, translate entities to message instances and vice-verse. It can also compose two message classes.
+ProtoPigeon provides utilities for generating protorpc Messages from ndb Models. It can generate Message classes from Models, translate entities to message instances and vice-verse. It can also compose multiple message classes together.
 
 
 Usage
