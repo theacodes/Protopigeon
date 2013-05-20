@@ -2,8 +2,6 @@ from google.appengine.ext import ndb
 import protopigeon
 import datetime
 
-from protopigeon import converters
-import sys
 
 class InnerModel(ndb.Model):
     one = ndb.StringProperty()
@@ -83,7 +81,7 @@ def make_test_model():
 def test_to_message():
     WidgetMessage, widget = make_test_model()
 
-    message = protopigeon.entity_to_message(widget, WidgetMessage)
+    message = protopigeon.to_message(widget, WidgetMessage)
 
     assert message.string == widget.string
     assert message.repeated_string == widget.repeated_string
@@ -118,35 +116,33 @@ def test_to_message():
     assert message.repeated_structured[0].one == widget.repeated_structured[0].one
 
     # Updating an existing instance
-    message = protopigeon.entity_to_message(widget, WidgetMessage(string='Meow'))
+    message = protopigeon.to_message(widget, WidgetMessage(string='Meow'))
 
     assert message.string == widget.string
     assert message.integer == widget.integer
 
 
 def test_to_model():
-
-    print sys.path
     WidgetMessage, widget = make_test_model()
 
     # Simple test
     message = WidgetMessage(string='Dalek', integer=1)
 
-    simple_widget = protopigeon.message_to_entity(message, MessageModelTest)
+    simple_widget = protopigeon.to_entity(message, MessageModelTest)
 
     assert message.string == simple_widget.string
     assert message.integer == simple_widget.integer
 
     # Updating an existing instance
-    simple_widget = protopigeon.message_to_entity(message, MessageModelTest(string='Meow'))
+    simple_widget = protopigeon.to_entity(message, MessageModelTest(string='Meow'))
 
     assert message.string == simple_widget.string
     assert message.integer == simple_widget.integer
 
     # Full serialization/deserialization comparion test.
-    message = protopigeon.entity_to_message(widget, WidgetMessage)
+    message = protopigeon.to_message(widget, WidgetMessage)
     print message
-    deserialized = protopigeon.message_to_entity(message, MessageModelTest)
+    deserialized = protopigeon.to_entity(message, MessageModelTest)
 
     for prop in MessageModelTest._properties.keys():
         assert getattr(deserialized, prop) == getattr(widget, prop)
@@ -156,13 +152,13 @@ def test_empty_values():
     WidgetMessage, widget = make_test_model()
 
     empty_widget = MessageModelTest()
-    message = protopigeon.entity_to_message(empty_widget, WidgetMessage)
+    message = protopigeon.to_message(empty_widget, WidgetMessage)
 
     for prop in MessageModelTest._properties.keys():
         assert not getattr(message, prop)
 
     empty_message = WidgetMessage()
-    widget = protopigeon.message_to_entity(empty_message, MessageModelTest)
+    widget = protopigeon.to_entity(empty_message, MessageModelTest)
 
     for field in WidgetMessage.all_fields():
         assert not getattr(widget, prop)

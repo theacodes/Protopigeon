@@ -175,14 +175,14 @@ class GeoPtConverter(Converter):
 class StructuredConverter(Converter):
     @staticmethod
     def to_message(Model, property, field, value):
-        from .translators import entity_to_message
-        return entity_to_message(value, field.type)
+        from .translators import to_message
+        return to_message(value, field.type)
 
     @staticmethod
     def to_model(Message, property, field, value):
-        from .translators import message_to_entity
+        from .translators import to_entity
         if value:
-            return message_to_entity(value, property._modelclass)
+            return to_entity(value, property._modelclass)
 
     @staticmethod
     def to_field(Model, property, count):

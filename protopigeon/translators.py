@@ -15,7 +15,7 @@ def _common_fields(entity, message):
     return message_fields, entity_properties, fields
 
 
-def entity_to_message(entity, message, converters=None):
+def to_message(entity, message, converters=None):
     message_fields, entity_properties, fields = _common_fields(entity, message)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
@@ -49,7 +49,7 @@ def entity_to_message(entity, message, converters=None):
         return message
 
 
-def message_to_entity(message, model, converters=None):
+def to_entity(message, model, converters=None):
     message_fields, entity_properties, fields = _common_fields(model, message)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
