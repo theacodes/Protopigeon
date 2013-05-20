@@ -2,7 +2,10 @@ import inspect
 import copy
 from protorpc import messages
 from .converters import converters as default_converters
-from ..bunch import Bunch
+
+
+class holder(object):
+    pass
 
 
 def _common_fields(entity, message):
@@ -95,8 +98,11 @@ def model_message(Model, only=None, exclude=None, converters=None):
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
 
     # Add in the key field.
+    key_holder = holder()
+    key_holder.name = 'key',
+    key_holder._repeated = False
     field_dict = {
-        'key': converters['Key'].to_field(Model, Bunch(name='key', _repeated=False), 1)
+        'key': converters['Key'].to_field(Model, key_holder, 1)
     }
 
     # Add all other fields.
