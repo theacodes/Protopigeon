@@ -1,7 +1,7 @@
 import datetime
 from protorpc import messages, message_types, util
-from google.appengine.api import users
 from google.appengine.ext import ndb
+from google.appengine.api import users
 from .types import DateMessage, TimeMessage, UserMessage, KeyMessage, GeoPtMessage
 
 
@@ -193,19 +193,19 @@ class StructuredConverter(Converter):
 
 converters = {
     'Key': KeyConverter,
-    ndb.BooleanProperty: BooleanConverter,
-    ndb.IntegerProperty: IntegerConverter,
-    ndb.FloatProperty: FloatConverter,
-    ndb.BlobProperty: BytesConverter,
-    ndb.StringProperty: StringConverter,
-    ndb.TextProperty: StringConverter,
-    ndb.DateTimeProperty: DateTimeConverter,
-    ndb.TimeProperty: TimeConverter,
-    ndb.DateProperty: DateConverter,
-    ndb.UserProperty: UserConverter,
-    ndb.GeoPtProperty: GeoPtConverter,
-    ndb.KeyProperty: KeyConverter,
-    ndb.BlobKeyProperty: BlobKeyConverter,
-    ndb.StructuredProperty: StructuredConverter,
-    ndb.LocalStructuredProperty: StructuredConverter
+    'BooleanProperty': BooleanConverter,
+    'IntegerProperty': IntegerConverter,
+    'FloatProperty': FloatConverter,
+    'BlobProperty': BytesConverter,
+    'StringProperty': StringConverter,
+    'TextProperty': StringConverter,
+    'DateTimeProperty': DateTimeConverter,
+    'TimeProperty': TimeConverter,
+    'DateProperty': DateConverter,
+    'UserProperty': UserConverter,
+    'GeoPtProperty': GeoPtConverter,
+    'KeyProperty': KeyConverter,
+    'BlobKeyProperty': BlobKeyConverter,
+    'StructuredProperty': StructuredConverter,
+    'LocalStructuredProperty': StructuredConverter
 }

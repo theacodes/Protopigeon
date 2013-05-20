@@ -31,7 +31,7 @@ def entity_to_message(entity, message, converters=None):
         message_field = message.field_by_name(field)
         value = getattr(entity, field)
 
-        converter = converters[property.__class__]
+        converter = converters[property.__class__.__name__]
 
         if converter:
             if value:  # only try to convert if the value is meaningful, otherwise leave it as Falsy.
@@ -66,7 +66,7 @@ def message_to_entity(message, model, converters=None):
         message_field = message.field_by_name(field)
         value = getattr(message, field)
 
-        converter = converters[property.__class__]
+        converter = converters[property.__class__.__name__]
 
         if value and converter:
             if property._repeated:
@@ -108,7 +108,7 @@ def model_message(Model, only=None, exclude=None, converters=None):
     # Add all other fields.
     for count, name in enumerate(field_names, start=2):
         prop = props[name]
-        converter = converters.get(prop.__class__, None)
+        converter = converters.get(prop.__class__.__name__, None)
 
         if converter:
             field_dict[name] = converter.to_field(Model, prop, count)
