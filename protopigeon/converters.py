@@ -112,11 +112,8 @@ class UserConverter(Converter):
     def to_model(Message, property, field, value):
         if isinstance(value, basestring):
             return users.User(email=value)
-        elif isinstance(value, UserMessage):
-            if value.user_id:
-                return users.User(email=value.user_id)
-            elif value.email:
-                return users.User(email=value.email)
+        elif isinstance(value, UserMessage) and value.email:
+            return users.User(email=value.email)
 
     @staticmethod
     def to_field(Model, property, count):
