@@ -34,7 +34,7 @@ def to_message(entity, message, converters=None):
         converter = converters[property.__class__.__name__]
 
         if converter:
-            if value:  # only try to convert if the value is meaningful, otherwise leave it as Falsy.
+            if value is not None:  # only try to convert if the value is meaningful, otherwise leave it as Falsy.
                 if property._repeated:
                     value = [converter.to_message(entity, property, message_field, x) if x else x for x in value]
                 else:
@@ -68,7 +68,7 @@ def to_entity(message, model, converters=None):
 
         converter = converters[property.__class__.__name__]
 
-        if value and converter:
+        if value is not None and converter:
             if property._repeated:
                 value = [converter.to_model(message, property, message_field, x) if x else x for x in value]
             else:
