@@ -139,7 +139,7 @@ class KeyConverter(Converter):
     def to_message(Mode, property, field, value):
         return KeyMessage(
             urlsafe=value.urlsafe(),
-            id=u'%s' % value.id(),
+            id=str(value.integer_id()) if value.integer_id() else value.string_id().decode('utf8'),
             kind=value.kind())
 
     @staticmethod
