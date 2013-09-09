@@ -162,3 +162,16 @@ def test_empty_values():
 
     for field in WidgetMessage.all_fields():
         assert not getattr(widget, prop)
+
+def test_partials():
+    WidgetMessage, widget = make_test_model()
+
+    msg = WidgetMessage(string='meow')
+    widget = protopigeon.to_entity(msg, widget, only=('string',))
+
+    assert widget.repeated_string
+    assert widget.string == 'meow'
+
+    widget = protopigeon.to_entity(msg, widget)
+
+    assert not widget.repeated_string
