@@ -2,6 +2,7 @@ import inspect
 import copy
 from protorpc import messages
 from .converters import converters as default_converters
+from google.appengine.ext import ndb
 
 
 class holder(object):
@@ -11,7 +12,11 @@ class holder(object):
 def _common_fields(entity, message, only=None, exclude=None):
     message_fields = [x.name for x in message.all_fields()]
     entity_properties = [k for k, v in entity._properties.iteritems()]
-    fields = set(message_fields) & set(entity_properties)
+    
+    if (inspect.isclass(entity) and not issubclass(entity, ndb.Expando)) and not isinstance(entity, ndb.Expando):
+        fields = set(message_fields) & set(entity_properties)
+    else:
+        fields = set(message_fields) - set(['key'])
 
     if only:
         fields = set(only) & set(fields)
@@ -34,6 +39,9 @@ def to_message(entity, message, converters=None, only=None, exclude=None):
 
     # Other fields
     for field in fields:
+        if not field in entity._properties:
+            continue
+
         property = entity._properties[field]
         message_field = message.field_by_name(field)
         value = getattr(entity, field)
@@ -69,11 +77,16 @@ def to_entity(message, model, converters=None, only=None, exclude=None):
 
     # Other fields
     for field in fields:
-        property = model._properties[field]
-        message_field = message.field_by_name(field)
-        value = getattr(message, field)
+        if field in model._properties:
+            property = model._properties[field]
+        elif (inspect.isclass(model) and issubclass(model, ndb.Expando)) or isinstance(model, ndb.Expando):
+            property = ndb.GenericProperty(field)
+        else:
+            continue
 
         converter = converters[property.__class__.__name__]
+        message_field = message.field_by_name(field)
+        value = getattr(message, field)
 
         if converter:
             if value is not None:
@@ -81,7 +94,13 @@ def to_entity(message, model, converters=None, only=None, exclude=None):
                     value = [converter.to_model(message, property, message_field, x) if x else x for x in value]
                 else:
                     value = converter.to_model(message, property, message_field, value)
+            elif property._repeated:
+                value = []
+
             values[field] = value
+            
+    import logging
+    logging.info(values)
 
     if inspect.isclass(model):
         return model(**values)
