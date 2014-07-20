@@ -13,11 +13,11 @@ setup(
     url='https://bitbucket.org/jonparrott/protopigeon',
     license='Apache License 2.0',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python',
     ],
-    packages=['ferris3'],
+    packages=['protopigeon'],
     install_requires=[
     ],
 )
