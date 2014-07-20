@@ -22,7 +22,7 @@ class Converter(object):
 class StringConverter(Converter):
     @staticmethod
     def to_field(Model, property, count):
-        return messages.StringField(count, repeated=property._repeated)
+        return messages.StringField(count, repeated=property._repeated, required=property._required)
 
 
 class BytesConverter(Converter):

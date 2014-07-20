@@ -12,7 +12,7 @@ class holder(object):
 def _common_fields(entity, message, only=None, exclude=None):
     message_fields = [x.name for x in message.all_fields()]
     entity_properties = [k for k, v in entity._properties.iteritems()]
-    
+
     if (inspect.isclass(entity) and not issubclass(entity, ndb.Expando)) and not isinstance(entity, ndb.Expando):
         fields = set(message_fields) & set(entity_properties)
     else:
@@ -110,7 +110,7 @@ def to_entity(message, model, converters=None, only=None, exclude=None):
 
 
 def model_message(Model, only=None, exclude=None, converters=None):
-    name = Model.__name__ + 'Message'
+    class_name = Model.__name__ + 'Message'
 
     props = Model._properties
     sorted_props = sorted(props.iteritems(), key=lambda prop: prop[1]._creation_counter)
@@ -140,13 +140,14 @@ def model_message(Model, only=None, exclude=None, converters=None):
         if converter:
             field_dict[name] = converter.to_field(Model, prop, count)
 
-    return type(name, (messages.Message,), field_dict)
+    return type(class_name, (messages.Message,), field_dict)
 
 
 def list_message(message_type):
     name = message_type.__name__ + 'List'
     fields = {
         'items': messages.MessageField(message_type, 1, repeated=True),
+        'next_page_token': messages.StringField(2)
     }
     return type(name, (messages.Message,), fields)
 
