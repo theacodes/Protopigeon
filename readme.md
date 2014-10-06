@@ -1,7 +1,7 @@
 ProtoPigeon
 ===========
 
-Protopigeon provides utilities for generating [protorpc Messages](https://cloud.google.com/appengine/docs/python/tools/protorpc/#Working_with_Messages) from [ndb Models]()https://cloud.google.com/appengine/docs/python/ndb/. It can generate Message classes from Models, translate entities to message instances and vice-verse. It can also compose multiple message classes together.
+Protopigeon provides utilities for generating [protorpc Messages](https://cloud.google.com/appengine/docs/python/tools/protorpc/#Working_with_Messages) from [ndb Models](https://cloud.google.com/appengine/docs/python/ndb/). It can generate Message classes from Models, translate entities to message instances and vice-verse. It can also compose multiple message classes together.
 
 
 Usage
