@@ -8,9 +8,9 @@ setup(
     author='Jon Parrott',
     author_email='jjramone13@gmail.com',
     maintainer='Jon Parrott / Cloud Sherpas',
-    maintainer_email='jonathan.parrott@cloudsherpas.com',
+    maintainer_email='jon.wayne.parrott@gmail.com',
     description="A helper library for working with Google's protorpc and App Engine's datastore",
-    url='https://bitbucket.org/jonparrott/protopigeon',
+    url='https://github.com/jonparrott/Protopigeon',
     license='Apache License 2.0',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
