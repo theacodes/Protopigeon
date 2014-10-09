@@ -101,9 +101,6 @@ def to_entity(message, model, converters=None, only=None, exclude=None, include_
 
             values[field] = value
 
-    import logging
-    logging.info(values)
-
     if inspect.isclass(model):
         return model(**values)
     else:
@@ -142,7 +139,6 @@ def model_message(Model, only=None, exclude=None, converters=None, include_key=T
         if converter:
             field_dict[name] = converter.to_field(Model, prop, count)
 
-    print field_dict
     return type(class_name, (messages.Message,), field_dict)
 
 
