@@ -27,19 +27,21 @@ def _common_fields(entity, message, only=None, exclude=None):
     return message_fields, entity_properties, fields
 
 
-def to_message(entity, message, converters=None, only=None, exclude=None):
+def to_message(entity, message, converters=None, only=None, exclude=None, include_key=True):
     message_fields, entity_properties, fields = _common_fields(entity, message, only, exclude)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
 
     # Key first
-    values = {
-        'key': converters['Key'].to_message(entity, 'key', 'key', entity.key) if entity.key else None
-    }
+    values = {}
+
+    # Key first
+    if include_key:
+        values['datastore_key'] = converters['Key'].to_message(entity, 'key', 'datastore_key', entity.key) if entity.key else None
 
     # Other fields
     for field in fields:
-        if not field in entity._properties:
+        if field not in entity._properties:
             continue
 
         property = entity._properties[field]
@@ -64,7 +66,7 @@ def to_message(entity, message, converters=None, only=None, exclude=None):
         return message
 
 
-def to_entity(message, model, converters=None, only=None, exclude=None):
+def to_entity(message, model, converters=None, only=None, exclude=None, include_key=True):
     message_fields, entity_properties, fields = _common_fields(model, message, only, exclude)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
@@ -72,8 +74,8 @@ def to_entity(message, model, converters=None, only=None, exclude=None):
     values = {}
 
     # Key first, if it's there
-    if hasattr(message, 'key') and message.key:
-        values['key'] = converters['Key'].to_model(messages, 'key', 'key', message.key) if message.key else None
+    if include_key and hasattr(message, 'datastore_key') and message.datastore_key:
+        values['key'] = converters['Key'].to_model(messages, 'key', 'datastore_key', message.datastore_key)
 
     # Other fields
     for field in fields:
@@ -98,7 +100,7 @@ def to_entity(message, model, converters=None, only=None, exclude=None):
                 value = []
 
             values[field] = value
-            
+
     import logging
     logging.info(values)
 
@@ -109,7 +111,7 @@ def to_entity(message, model, converters=None, only=None, exclude=None):
         return model
 
 
-def model_message(Model, only=None, exclude=None, converters=None):
+def model_message(Model, only=None, exclude=None, converters=None, include_key=True):
     class_name = Model.__name__ + 'Message'
 
     props = Model._properties
@@ -129,7 +131,7 @@ def model_message(Model, only=None, exclude=None, converters=None):
     key_holder.name = 'key',
     key_holder._repeated = False
     field_dict = {
-        'key': converters['Key'].to_field(Model, key_holder, 1)
+        'datastore_key': converters['Key'].to_field(Model, key_holder, 1)
     }
 
     # Add all other fields.
@@ -140,6 +142,7 @@ def model_message(Model, only=None, exclude=None, converters=None):
         if converter:
             field_dict[name] = converter.to_field(Model, prop, count)
 
+    print field_dict
     return type(class_name, (messages.Message,), field_dict)
 
 
