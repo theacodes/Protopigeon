@@ -1,3 +1,3 @@
 #!/bin/bash
 
-nosetests --with-ferris tests
+nosetests --with-ferris tests --logging-level=INFO

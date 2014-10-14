@@ -2,7 +2,7 @@ import datetime
 from protorpc import messages, message_types, util
 from google.appengine.ext import ndb
 from google.appengine.api import users
-from .types import DateMessage, TimeMessage, UserMessage, KeyMessage, GeoPtMessage
+from .types import DateMessage, TimeMessage, UserMessage, GeoPtMessage
 
 
 class Converter(object):
@@ -137,21 +137,17 @@ class BlobKeyConverter(Converter):
 class KeyConverter(Converter):
     @staticmethod
     def to_message(Mode, property, field, value):
-        return KeyMessage(
-            urlsafe=value.urlsafe(),
-            id=str(value.integer_id()) if value.integer_id() else value.string_id().decode('utf8'),
-            kind=value.kind())
+        if value.id():
+            return value.urlsafe()
 
     @staticmethod
     def to_model(Message, property, field, value):
         if isinstance(value, basestring):
             return ndb.Key(urlsafe=value)
-        elif isinstance(value, KeyMessage):
-            return ndb.Key(urlsafe=value.urlsafe)
 
     @staticmethod
     def to_field(Model, property, count):
-        return messages.MessageField(KeyMessage, count, repeated=property._repeated)
+        return messages.StringField(count, repeated=property._repeated)
 
 
 class GeoPtConverter(Converter):

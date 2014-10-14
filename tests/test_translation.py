@@ -97,9 +97,9 @@ class TestTranslation(AppEngineTest):
         assert message.repeated_integer == widget.repeated_integer
         assert message.float == widget.float
         assert message.repeated_float == widget.repeated_float
-        assert message.key_prop.urlsafe == widget.key_prop.urlsafe()
+        assert message.key_prop == widget.key_prop.urlsafe()
         assert len(message.repeated_key) == 2
-        assert message.repeated_key[0].urlsafe == widget.repeated_key[0].urlsafe()
+        assert message.repeated_key[0] == widget.repeated_key[0].urlsafe()
         assert message.datetime.year == widget.datetime.year
         assert message.datetime.month == widget.datetime.month
         assert message.datetime.day == widget.datetime.day
@@ -116,7 +116,7 @@ class TestTranslation(AppEngineTest):
         assert message.structured.one == widget.structured.one
         assert message.structured.two == widget.structured.two
         assert message.repeated_structured[0].one == widget.repeated_structured[0].one
-        assert message.datastore_key.urlsafe == widget.key.urlsafe()
+        assert message.itemId == widget.key.urlsafe()
 
         # Updating an existing instance
         message = protopigeon.to_message(widget, WidgetMessage(string='Meow'))
