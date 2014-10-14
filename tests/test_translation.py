@@ -46,6 +46,21 @@ class TestTranslation(AppEngineTest):
         for prop in properties:
             assert prop in fields
 
+    def test_keys(self):
+        test_key = ndb.Key(MessageModelTest, '123')
+
+        WidgetMessage = protopigeon.model_message(MessageModelTest)
+        assert hasattr(WidgetMessage, 'itemId')
+
+        m = WidgetMessage(itemId=test_key.urlsafe())
+        assert protopigeon.to_entity(m, MessageModelTest).key == test_key
+
+        WidgetMessage = protopigeon.model_message(MessageModelTest, key_field='key')
+        assert hasattr(WidgetMessage, 'key')
+
+        m = WidgetMessage(key=test_key.urlsafe())
+        assert protopigeon.to_entity(m, MessageModelTest, key_field='key').key == test_key
+
     def make_test_model(self):
         WidgetMessage = protopigeon.model_message(MessageModelTest)
 
