@@ -91,7 +91,7 @@ Things that don't work
 
 At the moment, I do not have a clever solution for supporting computed properties. I may take the approach seen in the endpoints-proto-datastore and add a TypedComputedProperty. However, my goal was to not modify any Model classes if I didn't absolutely have to. I'm open to suggestions on this.
 
-In the meantime it's pretty easy to fill in the data yourslf using the above method of composing messages.
+In the meantime it's pretty easy to fill in the data yourself using the above method of composing messages.
 
 
 Installation
