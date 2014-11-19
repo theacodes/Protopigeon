@@ -32,12 +32,12 @@ def model_message(Model, only=None, exclude=None, converters=None):
     return type(class_name, (messages.Message,), field_dict)
 
 
-def to_message(entity, message, converters=None, only=None, exclude=None):
-    message_fields, entity_properties, fields = _common_fields(entity, message, only, exclude)
+def to_message(model, message, converters=None, only=None, exclude=None):
+    message_fields, entity_properties, fields = _common_fields(model, message, only, exclude)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
 
-    columns = entity.__table__.columns
+    columns = model.__table__.columns
 
     values = {}
 
@@ -45,15 +45,15 @@ def to_message(entity, message, converters=None, only=None, exclude=None):
         if field not in columns:
             continue
 
-        property = columns[field]
+        column = columns[field]
         message_field = message.field_by_name(field)
-        value = getattr(entity, field)
+        value = getattr(model, field)
 
-        converter = converters[property.type.__class__.__name__]
+        converter = converters[column.type.__class__.__name__]
 
         if converter:
             if value is not None:  # only try to convert if the value is meaningful, otherwise leave it as Falsy.
-                value = converter.to_message(entity, property, message_field, value)
+                value = converter.to_message(model, column, message_field, value)
             values[field] = value
 
     if inspect.isclass(message):
@@ -66,9 +66,9 @@ def to_message(entity, message, converters=None, only=None, exclude=None):
 
 def _common_fields(entity, message, only=None, exclude=None):
     message_fields = [x.name for x in message.all_fields()]
-    entity_properties = [x.name for x in entity.__table__.columns]
+    column_names = [x.name for x in entity.__table__.columns]
 
-    fields = set(message_fields) & set(entity_properties)
+    fields = set(message_fields) & set(column_names)
 
     if only:
         fields = set(only) & set(fields)
@@ -76,4 +76,4 @@ def _common_fields(entity, message, only=None, exclude=None):
     if exclude:
         fields = [x for x in fields if x not in exclude]
 
-    return message_fields, entity_properties, fields
+    return message_fields, column_names, fields
