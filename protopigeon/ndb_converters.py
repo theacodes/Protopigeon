@@ -3,20 +3,7 @@ from protorpc import messages, message_types, util
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from .types import DateMessage, TimeMessage, UserMessage, GeoPtMessage
-
-
-class Converter(object):
-    @staticmethod
-    def to_message(Mode, property, field, value):
-        return value
-
-    @staticmethod
-    def to_model(Message, property, field, value):
-        return value
-
-    @staticmethod
-    def to_field(Model, property, count):
-        return None
+from .converter import Converter
 
 
 class StringConverter(Converter):
