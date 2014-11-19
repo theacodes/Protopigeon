@@ -33,7 +33,7 @@ def model_message(Model, only=None, exclude=None, converters=None):
 
 
 def to_message(model, message, converters=None, only=None, exclude=None):
-    message_fields, entity_properties, fields = _common_fields(model, message, only, exclude)
+    message_fields, _, fields = _common_fields(model, message, only, exclude)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
 
@@ -62,6 +62,43 @@ def to_message(model, message, converters=None, only=None, exclude=None):
         for name, value in values.iteritems():
             setattr(message, name, value)
         return message
+
+
+def to_model(message, model, converters=None, only=None, exclude=None):
+    message_fields, _, fields = _common_fields(model, message, only, exclude)
+
+    converters = dict(default_converters.items() + converters.items()) if converters else default_converters
+
+    values = {}
+
+    columns = model.__table__.columns
+
+    # Other fields
+    for field in fields:
+        if field not in columns:
+            continue
+
+        column = columns[field]
+
+        converter = converters[column.type.__class__.__name__]
+
+        if not converter:
+            continue
+
+        message_field = message.field_by_name(field)
+        value = getattr(message, field)
+
+        if value is not None:
+            value = converter.to_model(message, column, message_field, value)
+
+        values[field] = value
+
+    if inspect.isclass(model):
+        return model(**values)
+    else:
+        for k, v in values.iteritems():
+            setattr(model, k, v)
+        return model
 
 
 def _common_fields(entity, message, only=None, exclude=None):

@@ -24,7 +24,7 @@ class TestSqlTranslations(AppEngineTest):
         for column in Example.__table__.columns:
             assert column.name in fields
 
-    def test_to_message(self):
+    def test_to_and_from(self):
         Msg = sql_translators.model_message(Example)
         item = Example()
         item.id = 12
@@ -34,3 +34,14 @@ class TestSqlTranslations(AppEngineTest):
 
         assert msg.id == item.id
         assert msg.name == item.name
+
+        new_item = sql_translators.to_model(msg, Example)
+
+        assert new_item.id == item.id
+        assert new_item.name == new_item.name
+
+        msg.id = 13
+        overwrite_item = sql_translators.to_model(msg, new_item)
+
+        assert overwrite_item.id == 13
+        assert overwrite_item.name == new_item.name
