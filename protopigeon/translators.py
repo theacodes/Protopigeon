@@ -1,12 +1,15 @@
 import inspect
 import copy
 from protorpc import messages
-from .converters import converters as default_converters
+from .ndb_converters import converters as default_ndb_converters
 from google.appengine.ext import ndb
 
 
 class holder(object):
     pass
+
+
+default_converters = default_ndb_converters
 
 
 def _common_fields(entity, message, only=None, exclude=None):
