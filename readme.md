@@ -1,13 +1,13 @@
-ProtoPigeon
+Protopigeon
 ===========
 
-Protopigeon provides utilities for generating [protorpc Messages](https://cloud.google.com/appengine/docs/python/tools/protorpc/#Working_with_Messages) from [ndb Models](https://cloud.google.com/appengine/docs/python/ndb/). It can generate Message classes from Models, translate entities to message instances and vice-verse. It can also compose multiple message classes together.
+Protopigeon provides utilities for generating [protorpc Messages](https://cloud.google.com/appengine/docs/python/tools/protorpc/#Working_with_Messages) from [ndb Models](https://cloud.google.com/appengine/docs/python/ndb/). It can generate Message classes from Models, translate entities to message instances and vice-versa. It can also compose multiple message classes together.
 
 
 Usage
 =====
 
-Generating Message classes from a Model
+Generating message classes from a model
 ---------------------------------------
 
 If you have a model:
@@ -32,7 +32,7 @@ ActorWithoutRatingMessage = protopigeon.model_message(Action, exclude=('rating',
 ActorRatingMessage = protopigeon.model_message(Action, only=('rating',))
 ```
 
-Translating between Entities and Messages
+Translating between entities and messages
 -----------------------------------------
 
 Playing on the previous example, if you have an entity (an instance of a Model) and want to make a message:
@@ -58,7 +58,7 @@ new_doctor = protopigeon.to_entity(doctor_no_rating, Actor)  # all fields but ra
 protopigeon.to_entity(doctor_rating, new_doctor) # rating has been populated now, it's a complete entity.
 ```
 
-Composing Messages
+Composing messages
 ------------------
 
 If you have two or more messages classes that you'd like to combine into one message, we can do that too.
@@ -86,12 +86,12 @@ instance = TravelerWithOriginAndTag(
 )
 ```
 
-Things That Don't Work
+Things that don't work
 ======================
 
 At the moment, I do not have a clever solution for supporting computed properties. I may take the approach seen in the endpoints-proto-datastore and add a TypedComputedProperty. However, my goal was to not modify any Model classes if I didn't absolutely have to. I'm open to suggestions on this.
 
-In the meantime it's pretty easy to fill in the data yourslf using the above method of composing messages.
+In the meantime it's pretty easy to fill in the data yourself using the above method of composing messages.
 
 
 Installation

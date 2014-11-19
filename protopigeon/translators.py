@@ -27,7 +27,7 @@ def _common_fields(entity, message, only=None, exclude=None):
     return message_fields, entity_properties, fields
 
 
-def to_message(entity, message, converters=None, only=None, exclude=None, key_field='itemId'):
+def to_message(entity, message, converters=None, only=None, exclude=None, key_field='id'):
     message_fields, entity_properties, fields = _common_fields(entity, message, only, exclude)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
@@ -66,7 +66,7 @@ def to_message(entity, message, converters=None, only=None, exclude=None, key_fi
         return message
 
 
-def to_entity(message, model, converters=None, only=None, exclude=None, key_field='itemId'):
+def to_entity(message, model, converters=None, only=None, exclude=None, key_field='id'):
     message_fields, entity_properties, fields = _common_fields(model, message, only, exclude)
 
     converters = dict(default_converters.items() + converters.items()) if converters else default_converters
@@ -108,7 +108,7 @@ def to_entity(message, model, converters=None, only=None, exclude=None, key_fiel
         return model
 
 
-def model_message(Model, only=None, exclude=None, converters=None, key_field='itemId'):
+def model_message(Model, only=None, exclude=None, converters=None, key_field='id'):
     class_name = Model.__name__ + 'Message'
 
     props = Model._properties
