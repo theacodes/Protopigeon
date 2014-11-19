@@ -50,9 +50,9 @@ class TestTranslation(AppEngineTest):
         test_key = ndb.Key(MessageModelTest, '123')
 
         WidgetMessage = protopigeon.model_message(MessageModelTest)
-        assert hasattr(WidgetMessage, 'itemId')
+        assert hasattr(WidgetMessage, 'id')
 
-        m = WidgetMessage(itemId=test_key.urlsafe())
+        m = WidgetMessage(id=test_key.urlsafe())
         assert protopigeon.to_entity(m, MessageModelTest).key == test_key
 
         WidgetMessage = protopigeon.model_message(MessageModelTest, key_field='key')
@@ -131,7 +131,7 @@ class TestTranslation(AppEngineTest):
         assert message.structured.one == widget.structured.one
         assert message.structured.two == widget.structured.two
         assert message.repeatedStructured[0].one == widget.repeatedStructured[0].one
-        assert message.itemId == widget.key.urlsafe()
+        assert message.id == widget.key.urlsafe()
 
         # Updating an existing instance
         message = protopigeon.to_message(widget, WidgetMessage(string='Meow'))
