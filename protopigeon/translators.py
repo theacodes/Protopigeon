@@ -3,6 +3,7 @@ import copy
 from protorpc import messages
 from .ndb_converters import converters as default_ndb_converters
 from google.appengine.ext import ndb
+from google.appengine.ext.ndb import polymodel
 
 
 class holder(object):
@@ -11,13 +12,26 @@ class holder(object):
 
 default_converters = default_ndb_converters
 
+_ndb_classes = (ndb.Model, ndb.Expando, polymodel.PolyModel)
+
+
+def _model_fields(model):
+    if (inspect.isclass(model) and issubclass(model, _ndb_classes)) or isinstance(model, _ndb_classes):
+        return [k for k, v in model._properties.iteritems()]
+    else:
+        raise ValueError("Not an ndb model")
+
+
+def _is_dynamic_model(model):
+    return (inspect.isclass(model) and not issubclass(model, ndb.Expando)) and not isinstance(model, ndb.Expando)
+
 
 def _common_fields(entity, message, only=None, exclude=None):
     message_fields = [x.name for x in message.all_fields()]
-    entity_properties = [k for k, v in entity._properties.iteritems()]
+    model_fields = _model_fields(entity)
 
-    if (inspect.isclass(entity) and not issubclass(entity, ndb.Expando)) and not isinstance(entity, ndb.Expando):
-        fields = set(message_fields) & set(entity_properties)
+    if _is_dynamic_model:
+        fields = set(message_fields) & set(model_fields)
     else:
         fields = set(message_fields) - set(['key'])
 
@@ -27,7 +41,7 @@ def _common_fields(entity, message, only=None, exclude=None):
     if exclude:
         fields = [x for x in fields if x not in exclude]
 
-    return message_fields, entity_properties, fields
+    return message_fields, model_fields, fields
 
 
 def to_message(entity, message, converters=None, only=None, exclude=None, key_field='id'):
