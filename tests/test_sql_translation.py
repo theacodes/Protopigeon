@@ -1,6 +1,6 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, Unicode
+from sqlalchemy import Column, Integer, Unicode, Boolean
 from ferrisnose import AppEngineTest
 from protopigeon import sql_translators
 
@@ -13,6 +13,7 @@ class Example(Base):
     __tablename__ = 'example'
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(255))
+    bool = Column(Boolean)
 
 
 class TestSqlTranslations(AppEngineTest):
@@ -29,19 +30,23 @@ class TestSqlTranslations(AppEngineTest):
         item = Example()
         item.id = 12
         item.name = 'Peter Capaldi'
+        item.bool = True
 
         msg = sql_translators.to_message(item, Msg)
 
         assert msg.id == item.id
         assert msg.name == item.name
+        assert msg.bool == item.bool
 
         new_item = sql_translators.to_model(msg, Example)
 
         assert new_item.id == item.id
-        assert new_item.name == new_item.name
+        assert new_item.name == item.name
+        assert new_item.bool == item.bool
 
         msg.id = 13
         overwrite_item = sql_translators.to_model(msg, new_item)
 
         assert overwrite_item.id == 13
         assert overwrite_item.name == new_item.name
+        assert overwrite_item.bool == new_item.bool
